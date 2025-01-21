@@ -2,14 +2,11 @@ package com.dabere.discountservice;
 
 import com.dabere.discountservice.dto.DiscountDto;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/discount")
@@ -25,7 +22,7 @@ public class DiscountController {
 
 
     @GetMapping(path = "/{skuCode}")
-    public ResponseEntity<DiscountDto> getDiscount(@PathVariable String skuCode) {
+    public ResponseEntity<DiscountDto> getActiveDiscount(@PathVariable String skuCode) {
         return discountService.getActiveDiscount(skuCode)
                 .map(discount -> {
                     DiscountDto discountDto = modelMapper.map(discount, DiscountDto.class);
@@ -55,12 +52,21 @@ public class DiscountController {
         else return ResponseEntity.badRequest().build();
     }
 
-    // Here be methods for debugging or other not business logic related methods
+    // Here be methods for debugging and admins
 
 
-    @GetMapping("/")
+    @GetMapping("/admin/")
     public List<DiscountDto> getAllDiscounts() {
         return new ArrayList<>();
+    }
+
+    @GetMapping("/admin/{discountId}")
+    public ResponseEntity<DiscountDto>  getDiscountWithId(@PathVariable Long discountId) {
+
+        return discountService.getDiscountById(discountId).map(discount -> {
+            DiscountDto discountDto = modelMapper.map(discount, DiscountDto.class);
+            return ResponseEntity.ok(discountDto);
+        }).orElseGet(() -> ResponseEntity.noContent().build());
     }
 
 }

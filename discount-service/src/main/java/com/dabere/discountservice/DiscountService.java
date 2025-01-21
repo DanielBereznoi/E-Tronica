@@ -54,7 +54,7 @@ public class DiscountService {
         return discountRepository.findAll();
     }
 
-    public Optional<Discount> getDiscount(Long discountId) {
+    public Optional<Discount> getDiscountById(Long discountId) {
         return discountRepository.findDiscountByDiscountId(discountId);
     }
 
@@ -87,4 +87,5 @@ public class DiscountService {
         });
         return discount.isPresent();
     }
+
 }
